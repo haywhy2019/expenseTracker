@@ -1,14 +1,16 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import RecentExpenses from "../screens/RecentExpenses";
 import AllExpenses from "../screens/AllExpenses";
 import { GlobalStyles } from "@/constants/styles";
 import { Ionicons } from "@expo/vector-icons";
 import IconButton from "@/components/UI/IconButton";
+import { AuthContext } from "@/store/AuthContext";
 
 const BottomTabs = createBottomTabNavigator();
 const ExpensenseOverView = () => {
+  const authCtx = useContext(AuthContext);
   return (
     <BottomTabs.Navigator
       screenOptions={({ navigation }) => ({
@@ -17,7 +19,7 @@ const ExpensenseOverView = () => {
         },
         headerTintColor: "white",
         tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-        tabBarActiveTintColor: GlobalStyles.colors.accent500,
+        tabBarActiveTintColor: "white",
         headerRight: ({ tintColor }) => (
           <IconButton
             icon={"add"}
@@ -37,7 +39,15 @@ const ExpensenseOverView = () => {
           title: "Recent Expenses",
           tabBarLabel: "Recent",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="hourglass" size={size} color={color} />
+            <Ionicons name="timer" size={size} color={color} />
+          ),
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="exit"
+              color={"white"}
+              size={24}
+              onPress={() => authCtx.logout()}
+            />
           ),
         }}
       />

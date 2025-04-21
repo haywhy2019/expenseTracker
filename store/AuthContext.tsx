@@ -19,6 +19,7 @@ function AuthContextProvider({ children }: any) {
   function logout() {
     setAuthToken("");
     AsyncStorage.removeItem("token");
+    console.log("pressed");
   }
 
   useEffect(() => {

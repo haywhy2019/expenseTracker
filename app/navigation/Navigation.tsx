@@ -12,46 +12,26 @@ import { GlobalStyles } from "@/constants/styles";
 import IconButton from "@/components/UI/IconButton";
 import { AuthContext } from "@/store/AuthContext";
 import ChartScreen from "../screens/ChartScreen";
+import SmartOCRExpense from "../screens/OcrSmartExpense";
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-  const authCtx = useContext(AuthContext);
+ 
   return (
     <>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <Stack.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
           headerTintColor: "white",
+          headerShown: false,
         }}
       >
-        <Stack.Screen
-          name="ExpensesOverview"
-          component={ExpensenseOverView}
-          options={{
-            headerShown: false,
-
-            headerRight: ({ tintColor }) => (
-              <IconButton
-                icon="exit"
-                color={tintColor}
-                size={24}
-                onPress={() => authCtx.logout}
-              />
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="ManageExpenses"
-          component={ManageExpenses}
-          // options={{ presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="Analysis"
-          component={ChartScreen}
-          // options={{ presentation: "modal" }}
-        />
+        <Stack.Screen name="ExpensesOverview" component={ExpensenseOverView} />
+        <Stack.Screen name="ManageExpenses" component={ManageExpenses} />
+        <Stack.Screen name="Analysis" component={ChartScreen} />
+        <Stack.Screen name="OcrScreen" component={SmartOCRExpense} />
       </Stack.Navigator>
     </>
   );

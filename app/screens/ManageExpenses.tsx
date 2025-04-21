@@ -8,6 +8,7 @@ import { storeExpense, updateExpense, deleteExpense } from "@/util/http";
 import LoadingOverlay from "@/components/UI/LoadingOverlay";
 import ErrorOverLay from "@/components/UI/ErrorOverLay";
 import { AuthContext } from "@/store/AuthContext";
+import Button from "@/components/UI/Button";
 
 const ManageExpenses = ({
   route,
@@ -98,6 +99,12 @@ const ManageExpenses = ({
           />
         </View>
       )}
+
+      <View style={styles.btn}>
+        <Button mode="" onPress={() => navigation.navigate("OcrScreen")}>
+          Select Invoice
+        </Button>
+      </View>
     </View>
   );
 };
@@ -118,4 +125,7 @@ const styles = StyleSheet.create({
     borderTopColor: GlobalStyles.colors.primary100,
     alignItems: "center",
   },
+  btn: {
+   marginTop: 40
+  }
 });

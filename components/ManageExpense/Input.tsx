@@ -6,7 +6,6 @@ import {
   TextInput,
 } from "react-native";
 import React from "react";
-import { GlobalStyles } from "@/constants/styles";
 
 type InputProps = {
   label: string;

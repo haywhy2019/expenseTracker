@@ -55,7 +55,7 @@ export default DropDownInput;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    // padding: 10,
   },
   dropdown: {
     height: 50,

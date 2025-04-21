@@ -9,6 +9,7 @@ function AuthForm(this: any, { isLogin, onSubmit, credentialsInvalid }: any) {
   const [enteredConfirmEmail, setEnteredConfirmEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
   const [enteredConfirmPassword, setEnteredConfirmPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const {
     email: emailIsInvalid,
@@ -65,9 +66,12 @@ function AuthForm(this: any, { isLogin, onSubmit, credentialsInvalid }: any) {
         <Input
           label="Password"
           onUpdateValue={updateInputValueHandler.bind(this, "password")}
-          secure
+          secure={!passwordVisible}
           value={enteredPassword}
           isInvalid={passwordIsInvalid}
+          showToggleIcon={true}
+          onToggleVisibility={() => setPasswordVisible((prev) => !prev)}
+          passwordVisible={passwordVisible}
         />
         {!isLogin && (
           <Input
@@ -76,9 +80,12 @@ function AuthForm(this: any, { isLogin, onSubmit, credentialsInvalid }: any) {
               this,
               "confirmPassword"
             )}
-            secure
+            secure={!passwordVisible}
             value={enteredConfirmPassword}
             isInvalid={passwordsDontMatch}
+            showToggleIcon={true}
+            onToggleVisibility={() => setPasswordVisible((prev) => !prev)}
+            passwordVisible={passwordVisible}
           />
         )}
         <View style={styles.buttons}>

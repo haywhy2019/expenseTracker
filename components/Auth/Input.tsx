@@ -4,9 +4,11 @@ import {
   TextInput,
   StyleSheet,
   KeyboardTypeOptions,
+  TouchableOpacity,
 } from "react-native";
 
 import { GlobalStyles as Colors } from "@/constants/styles";
+import { Ionicons } from "@expo/vector-icons";
 
 type InputProps = {
   label: string;
@@ -15,6 +17,9 @@ type InputProps = {
   onUpdateValue: (item: string) => void;
   value: string;
   isInvalid: boolean;
+  showToggleIcon?: boolean;
+  onToggleVisibility?: () => void;
+  passwordVisible?: boolean;
 };
 
 function Input({
@@ -24,6 +29,9 @@ function Input({
   onUpdateValue,
   value,
   isInvalid,
+  showToggleIcon,
+  onToggleVisibility,
+  passwordVisible,
 }: InputProps) {
   return (
     <View style={styles.inputContainer}>
@@ -38,6 +46,22 @@ function Input({
         onChangeText={onUpdateValue}
         value={value}
       />
+      {showToggleIcon && (
+        <TouchableOpacity
+          onPress={onToggleVisibility}
+          style={{
+            position: "absolute",
+            right: 10,
+            top: "50%",
+          }}
+        >
+          {passwordVisible ? (
+            <Ionicons name="eye-off" size={20} />
+          ) : (
+            <Ionicons name="eye" size={20} />
+          )}
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
