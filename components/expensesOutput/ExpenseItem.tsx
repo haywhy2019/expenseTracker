@@ -5,6 +5,7 @@ import { getFormattedDate } from "@/util/date";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/constants/types/types";
+import { formatCurrency } from "@/util/currency";
 
 const ExpenseItem = ({
   desc,
@@ -37,14 +38,14 @@ const ExpenseItem = ({
       <View style={styles.expenseItem}>
         <View>
           <Text style={[styles.textBase, styles.description]}>
-            {desc}
+            {desc.slice(0, 10)}
           </Text>
           <Text style={styles.textBase}>
             {getFormattedDate(new Date(date))}
           </Text>
         </View>
         <View style={styles.amountContainer}>
-          <Text style={styles.amount}>{parseFloat(amount).toFixed(2)}</Text>
+          <Text style={styles.amount}>{formatCurrency(amount)}</Text>
         </View>
       </View>
     </Pressable>
@@ -72,7 +73,6 @@ const styles = StyleSheet.create({
   },
   textBase: {
     color: GlobalStyles.colors.primary50,
-    
   },
   description: {
     fontSize: 16,

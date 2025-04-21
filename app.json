@@ -8,14 +8,19 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splashScreen.png",
+      "resizeMode": "contain", 
+      "backgroundColor": "#02542D"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.flint.expenseTracker"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/splashScreen.png",
+        "backgroundColor": "#02542D"
       },
       "package": "com.flint.expenseTracker",
       "versionCode": 1
@@ -30,10 +35,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/splashScreen.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#02542D"
         }
       ]
     ],

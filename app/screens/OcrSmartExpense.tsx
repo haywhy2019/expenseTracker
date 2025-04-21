@@ -21,6 +21,7 @@ import {
 import { isSupported, extractTextFromImage } from "expo-text-extractor";
 import * as ImagePicker from "expo-image-picker";
 import TesseractOcr from "@devinikhiya/react-native-tesseractocr";
+import { parseDateString } from "@/util/date";
 
 const SmartOCRExpense = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -37,29 +38,6 @@ const SmartOCRExpense = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const token = authCtx.token;
   const expensesCtx = useContext(ExpensesContext);
-
-  const extractFields = (lines: string) => {
-    const joinedText = lines;
-
-    console.log(joinedText, "joinedText");
-    // Extract amount
-    const amountMatch = joinedText.match(
-      /(?:₦|\$)?\s?(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i
-    );
-    if (amountMatch) setAmount(amountMatch[0]);
-
-    // Extract date
-    const dateMatch = joinedText.match(
-      /(\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}[/-]\d{1,2}[/-]\d{1,2})/
-    );
-    if (dateMatch) setDate(dateMatch[0]);
-
-    // Description: pick a likely line (first one that isn't amount/date)
-    // const possibleDesc = lines.find(
-    //   (line) => !line.toLowerCase().includes("total") && !/\d/.test(line)
-    // );
-    // if (possibleDesc) setDescription(possibleDesc);
-  };
 
   type ReceiptData = {
     date?: string;
@@ -100,18 +78,14 @@ const SmartOCRExpense = () => {
         descriptions.push(line);
         const stringDesc = descriptions.toString();
         const trimmed =
-          stringDesc.length > 50 ? stringDesc.slice(0, 50) + "..." : stringDesc;
+          stringDesc.length > 50 ? stringDesc.slice(0, 10) + "..." : stringDesc;
         setDescription(trimmed);
       }
     }
-
-    console.log(result, "ressst");
     return result;
   };
 
   const pickImage = async () => {
-    console.log("pressed");
-
     // Ask for permissions
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -141,11 +115,8 @@ const SmartOCRExpense = () => {
       console.log(uri, "uri", path);
       try {
         if (uri) {
-          console.log("Recognized:text");
           const result = await TesseractOcr.recognize(uri, "eng", {});
-          console.log("Recognized:", result);
           setTextLines(result);
-          extractFields(result); // Make sure this function logs something too
           extractReceiptDataFromText(result);
         }
       } catch (error) {
@@ -165,7 +136,7 @@ const SmartOCRExpense = () => {
       const id = await storeExpense(expenseData, token);
       expensesCtx.addExpense({ ...expenseData, id: id });
 
-      navigation.goBack();
+      navigation.navigate("Home");
     } catch (error) {
       setError("Could not save Data - please try again later");
       setLoading(false);
@@ -175,15 +146,22 @@ const SmartOCRExpense = () => {
   function submitHandler() {
     const expenseData = {
       amount: amount ? parseFloat(amount) : 0,
-      date: date ? new Date(date) : "",
+      date: date ? parseDateString(date) : "",
       desc: description ? description : "",
       category: category,
     };
-
+    console.log({ expenseData });
     const amountIsValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
     const dateIsValid = expenseData.date.toString() !== "Invalid Date";
     const descriptionIsValid = expenseData.desc.length > 0;
     const categoryIsValid = expenseData.category.trim().length > 0;
+    console.log(
+      { amountIsValid },
+      { dateIsValid },
+      { descriptionIsValid },
+      { categoryIsValid },
+      expenseData.date.toString()
+    );
     if (
       !amountIsValid ||
       !dateIsValid ||
@@ -287,7 +265,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     fontSize: 18,
   },
- 
+
   lineText: {
     fontSize: 14,
     marginBottom: 2,
