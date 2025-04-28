@@ -4,6 +4,7 @@ export type RootStackParamList = {
   Home: undefined;
   SignUp: undefined;
   Login: undefined;
-  Analysis: {screen: number};
+  Analysis: { screen: number };
   Profile: { userId: string }; // Example with params
+  ExpensesOverview: undefined;
 };

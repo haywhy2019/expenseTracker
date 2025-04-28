@@ -17,7 +17,7 @@ const AuthNavigation = () => {
     <>
       <StatusBar style="dark" />
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="Onboarding"
         screenOptions={{
           headerTintColor: "white",
           headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },

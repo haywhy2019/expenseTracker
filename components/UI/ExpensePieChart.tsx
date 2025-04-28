@@ -1,19 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { PieChart } from "react-native-svg-charts";
-import { G, Text as SvgText } from "react-native-svg";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { PieChart } from "react-native-chart-kit";
 import { Expense } from "@/store/ExpensesContext";
 
-type Slice = {
-  pieCentroid: [number, number];
-  data: {
-    key: string;
-    value: number;
-    percentage: string;
-    label: string;
-    svg: { fill: string };
-  };
-};
+const screenWidth = Dimensions.get("window").width;
 
 const ExpensePieChart = ({
   expenses,
@@ -37,65 +27,51 @@ const ExpensePieChart = ({
 
   const pieData = Object.entries(categoryTotals).map(
     ([category, amount], index) => {
-      const percentage = ((amount / totalSpent) * 100).toFixed(0);
+      const percentage = ((amount / totalSpent) * 100).toFixed(0); // ✨
       return {
-        key: category,
-        value: amount,
+        name: category,
+        amount,
         percentage,
-        label: `${percentage}%`,
-        category,
-        svg: { fill: colors[index % colors.length] },
-        arc: { outerRadius: "100%", padAngle: 0.02 },
+        color: colors[index % colors.length],
+        legendFontColor: "#7F7F7F",
+        legendFontSize: 14,
       };
     }
   );
-
-  const Labels = ({ slices }: { slices: Slice[] }) =>
-    React.createElement(
-      G,
-      {},
-      slices.map((slice, index) => {
-        const { pieCentroid, data } = slice;
-        return React.createElement(
-          SvgText as any,
-          {
-            key: `label-${index}`,
-            x: pieCentroid[0],
-            y: pieCentroid[1],
-            fill: "white",
-            textAnchor: "middle",
-            alignmentBaseline: "middle",
-            fontSize: 12,
-            stroke: "black",
-            strokeWidth: 0.2,
-          },
-          data.label
-        );
-      })
-    );
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Spending by Category</Text>
       <Text style={styles.subTitle}>{duration}</Text>
       <PieChart
-        style={{ height: 250 }}
-        data={pieData}
-        outerRadius={"80%"}
-        labelRadius={60}
-      >
-        {((props: any) => <Labels slices={props.slices} />) as any}
-      </PieChart>
+        data={pieData.map((item) => ({
+          name: item.name,
+          population: item.amount, // chart-kit expects 'population'
+          color: item.color,
+          legendFontColor: item.legendFontColor,
+          legendFontSize: item.legendFontSize,
+        }))}
+        width={screenWidth - 32}
+        height={220}
+        chartConfig={{
+          backgroundColor: "transparent",
+          backgroundGradientFrom: "#fff",
+          backgroundGradientTo: "#fff",
+          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        }}
+        accessor={"population"}
+        backgroundColor={"transparent"}
+        paddingLeft={"15"}
+        absolute
+      />
 
       {/* 🧾 Legend */}
       <View style={styles.legendContainer}>
         {pieData.map((item, index) => (
           <View key={index} style={styles.legendItem}>
-            <View
-              style={[styles.legendDot, { backgroundColor: item.svg.fill }]}
-            />
+            <View style={[styles.legendDot, { backgroundColor: item.color }]} />
             <Text style={styles.legendText}>
-              {item.key.charAt(0).toUpperCase() + item.key.slice(1)} —{" "}
+              {item.name.charAt(0).toUpperCase() + item.name.slice(1)} —{" "}
               {item.percentage}%
             </Text>
           </View>

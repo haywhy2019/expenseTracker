@@ -8,7 +8,7 @@ import { Expense, ExpensesContext } from "@/store/ExpensesContext";
 import { updateExpense, storeExpense } from "@/util/http";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "expo-router";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -18,7 +18,6 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import { isSupported, extractTextFromImage } from "expo-text-extractor";
 import * as ImagePicker from "expo-image-picker";
 import TesseractOcr from "@devinikhiya/react-native-tesseractocr";
 import { parseDateString } from "@/util/date";
@@ -135,11 +134,13 @@ const SmartOCRExpense = () => {
     try {
       const id = await storeExpense(expenseData, token);
       expensesCtx.addExpense({ ...expenseData, id: id });
-
-      navigation.navigate("Home");
-    } catch (error) {
-      setError("Could not save Data - please try again later");
+      setAmount("")
+      setDescription("")
       setLoading(false);
+      navigation.navigate("ExpensesOverview");
+    } catch (error) {
+      setLoading(false);
+      setError("Could not save Data - please try again later");
     }
   }
 
