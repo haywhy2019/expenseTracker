@@ -106,7 +106,7 @@ const SmartOCRExpense = () => {
 
     console.log("text1");
     if (!result.canceled && result.assets && result.assets.length > 0) {
-      console.log("text2");
+      
       const uri = result.assets[0].uri;
       setImageUri(uri);
 
@@ -134,10 +134,12 @@ const SmartOCRExpense = () => {
     try {
       const id = await storeExpense(expenseData, token);
       expensesCtx.addExpense({ ...expenseData, id: id });
-      setAmount("")
-      setDescription("")
+      setAmount("");
+      setDescription("");
       setLoading(false);
-      navigation.navigate("ExpensesOverview");
+      setTimeout(() => {
+        navigation.navigate("ExpensesOverview");
+      }, 2000);
     } catch (error) {
       setLoading(false);
       setError("Could not save Data - please try again later");
@@ -151,18 +153,12 @@ const SmartOCRExpense = () => {
       desc: description ? description : "",
       category: category,
     };
-    console.log({ expenseData });
+
     const amountIsValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
     const dateIsValid = expenseData.date.toString() !== "Invalid Date";
     const descriptionIsValid = expenseData.desc.length > 0;
     const categoryIsValid = expenseData.category.trim().length > 0;
-    console.log(
-      { amountIsValid },
-      { dateIsValid },
-      { descriptionIsValid },
-      { categoryIsValid },
-      expenseData.date.toString()
-    );
+
     if (
       !amountIsValid ||
       !dateIsValid ||
@@ -172,7 +168,6 @@ const SmartOCRExpense = () => {
       Alert.alert("Invalid input", "Please check your input values");
       return;
     } else {
-      console.log(expenseData);
       confirmHandler(expenseData);
     }
   }
@@ -225,7 +220,7 @@ const SmartOCRExpense = () => {
         <Text style={styles.label}>Date</Text>
         <TextInput
           style={styles.input}
-          placeholder="Date"
+          placeholder="DD/MM/YYYY"
           value={date}
           onChangeText={setDate}
         />
